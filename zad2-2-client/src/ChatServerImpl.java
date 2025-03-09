@@ -18,6 +18,12 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
     }
 
     @Override
+    public synchronized void unregisterClient(ChatClientInt client) throws RemoteException {
+        clients.remove(client);
+        System.out.println("Klient wyrejestrowany. Liczba klientów: " + clients.size());
+    }
+
+    @Override
     public synchronized void broadcastMessage(String message) throws RemoteException {
         System.out.println("Rozsyłanie wiadomości: " + message);
         for (ChatClientInt client : clients) {

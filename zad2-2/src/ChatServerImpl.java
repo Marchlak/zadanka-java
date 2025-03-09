@@ -1,6 +1,7 @@
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt {
@@ -18,13 +19,22 @@ public class ChatServerImpl extends UnicastRemoteObject implements ChatServerInt
     }
 
     @Override
+    public synchronized void unregisterClient(ChatClientInt client) throws RemoteException {
+        clients.remove(client);
+        System.out.println("Klient wyrejestrowany. Liczba klientów: " + clients.size());
+    }
+
+    @Override
     public synchronized void broadcastMessage(String message) throws RemoteException {
         System.out.println("Rozsyłanie wiadomości: " + message);
-        for (ChatClientInt client : clients) {
+        Iterator<ChatClientInt> iterator = clients.iterator();
+        while (iterator.hasNext()) {
+            ChatClientInt client = iterator.next();
             try {
                 client.receiveMessage(message);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                System.out.println("Usuwanie niedostępnego klienta...");
+                iterator.remove();
             }
         }
     }

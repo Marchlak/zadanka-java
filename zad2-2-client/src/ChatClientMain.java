@@ -8,6 +8,8 @@ public class ChatClientMain {
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
             }
+            System.setProperty("java.rmi.server.hostname", "192.168.0.103");
+
 
             Scanner scanner = new Scanner(System.in);
             System.out.print("Podaj swój nick: ");
@@ -19,10 +21,22 @@ public class ChatClientMain {
 
             server.registerClient(client);
 
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    if (server != null && client != null) {
+                        server.unregisterClient(client);
+                        System.out.println("Klient został wyrejestrowany w shutdown hook.");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }));
+
             System.out.println("Wpisz wiadomości (wpisz 'exit' aby zakończyć):");
             while (true) {
                 String message = scanner.nextLine();
                 if (message.equalsIgnoreCase("exit")) {
+                    server.unregisterClient(client);
                     break;
                 }
                 server.broadcastMessage(nickname + ": " + message);
