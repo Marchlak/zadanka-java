@@ -5,14 +5,10 @@ import java.util.List;
 
 public class KKSerwerImpl extends UnicastRemoteObject implements KKSerwerInt {
     private static final long serialVersionUID = 1L;
-
     private char[] board;
-
     private List<KKKlientInt> clients;
-
     private KKKlientInt playerX;
     private KKKlientInt playerO;
-
     private char currentPlayer;
 
     public KKSerwerImpl() throws RemoteException {
@@ -25,72 +21,54 @@ public class KKSerwerImpl extends UnicastRemoteObject implements KKSerwerInt {
         currentPlayer = 'X';
     }
 
-    @Override
     public synchronized char registerClient(KKKlientInt client) throws RemoteException {
-        if (clients.size() >= 2) {
-            client.showMessage("Serwer: Gra jest już pełna. Obserwujesz, ale nie grasz.");
+        if (clients.size() < 2) {
             clients.add(client);
-            return ' ';
-        } else {
-            clients.add(client);
-            char symbol = (clients.size() == 1) ? 'X' : 'O';
-            if (symbol == 'X') {
+            if (playerX == null) {
                 playerX = client;
-                client.showMessage("Serwer: Zarejestrowano jako gracz 'X'.");
-            } else {
+                broadcastMessage("Dołączył gracz X.");
+                broadcastUpdate();
+                return 'X';
+            } else if (playerO == null) {
                 playerO = client;
-                client.showMessage("Serwer: Zarejestrowano jako gracz 'O'.");
+                broadcastMessage("Dołączył gracz O.");
+                broadcastUpdate();
+                return 'O';
             }
-            broadcastUpdate();
-            return symbol;
         }
+        System.out.println("Siema");
+        clients.add(client);
+        broadcastUpdate();
+        return ' ';
     }
 
-    @Override
-    public synchronized boolean makeMove(KKKlientInt client, int position) throws RemoteException {
+    public synchronized boolean makeMove(char symbol, int position) throws RemoteException {
         int idx = position - 1;
         if (idx < 0 || idx > 8) {
-            client.showMessage("Niepoprawna pozycja. Wybierz 1-9.");
             return false;
         }
-
-        char symbol = (client == playerX) ? 'X' : (client == playerO) ? 'O' : ' ';
-
-        if (symbol == ' ') {
-            client.showMessage("Nie jesteś aktywnym graczem (obserwator).");
-            return false;
-        }
-
         if (symbol != currentPlayer) {
-            client.showMessage("Teraz ruch gracza " + currentPlayer + ", poczekaj na swoją kolej.");
             return false;
         }
-
         if (board[idx] != ' ') {
-            client.showMessage("Pole jest już zajęte!");
             return false;
         }
-
         board[idx] = symbol;
-
         if (checkWinner() == symbol) {
             broadcastMessage("Gracz " + symbol + " wygrywa!");
         } else if (isBoardFull()) {
-            broadcastMessage("Remis! Plansza jest pełna.");
+            broadcastMessage("Remis!");
         }
-
-        currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
-
+        currentPlayer = currentPlayer == 'X' ? 'O' : 'X';
         broadcastUpdate();
+        broadcastMessage("Teraz ruch gracza " + currentPlayer);
         return true;
     }
 
-    @Override
     public synchronized char[] getBoard() throws RemoteException {
         return board.clone();
     }
 
-    @Override
     public synchronized boolean isGameOver() throws RemoteException {
         if (checkWinner() != ' ' || isBoardFull()) {
             return true;
@@ -98,28 +76,50 @@ public class KKSerwerImpl extends UnicastRemoteObject implements KKSerwerInt {
         return false;
     }
 
-    @Override
     public synchronized char getWinner() throws RemoteException {
         return checkWinner();
     }
 
-    private void broadcastUpdate() throws RemoteException {
-        for (KKKlientInt cli : clients) {
-            cli.updateBoard(board);
+    public synchronized void unregisterClient(KKKlientInt client) throws RemoteException {
+        clients.remove(client);
+        System.out.println(clients.size());
+        if (client == playerX) playerX = null;
+        if (client == playerO) playerO = null;
+        broadcastMessage("Jeden z graczy się wylogował.");
+        resetGame(client);
+        broadcastUpdate();
+    }
+
+    @Override
+    public synchronized char resetGame(KKKlientInt client) throws RemoteException {
+        for (int i = 0; i < 9; i++) {
+            System.out.print(board[i]);
+            board[i] = ' ';
+        }
+        currentPlayer = 'X';
+        if (!clients.contains(client)) {
+            clients.add(client);
+        }
+        if (playerX == null) {
+            playerX = client;
+            broadcastMessage("Nowa gra. Gracz X rozpoczyna.");
+            broadcastUpdate();
+            return 'X';
+        } else if (playerO == null && playerX != client) {
+            playerO = client;
+            broadcastMessage("Gracz O dołącza do nowej gry.");
+            broadcastUpdate();
+            return 'O';
+        } else {
+            broadcastUpdate();
+            return ' ';
         }
     }
 
-    private void broadcastMessage(String msg) throws RemoteException {
-        for (KKKlientInt cli : clients) {
-            cli.showMessage(msg);
-        }
-    }
 
     private boolean isBoardFull() {
         for (char c : board) {
-            if (c == ' ') {
-                return false;
-            }
+            if (c == ' ') return false;
         }
         return true;
     }
@@ -131,12 +131,22 @@ public class KKSerwerImpl extends UnicastRemoteObject implements KKSerwerInt {
                 {0,4,8},{2,4,6}
         };
         for (int[] w : wins) {
-            if (board[w[0]] != ' ' &&
-                    board[w[0]] == board[w[1]] &&
-                    board[w[1]] == board[w[2]]) {
+            if (board[w[0]] != ' ' && board[w[0]] == board[w[1]] && board[w[1]] == board[w[2]]) {
                 return board[w[0]];
             }
         }
         return ' ';
+    }
+
+    private void broadcastUpdate() throws RemoteException {
+        for (KKKlientInt c : clients) {
+            c.updateBoard(board);
+        }
+    }
+
+    private void broadcastMessage(String msg) throws RemoteException {
+        for (KKKlientInt c : clients) {
+            c.showMessage(msg);
+        }
     }
 }
