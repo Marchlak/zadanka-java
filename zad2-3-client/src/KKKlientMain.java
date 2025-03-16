@@ -50,21 +50,7 @@ public class KKKlientMain {
                     } else {
                         System.out.println("Koniec gry! Remis.");
                     }
-                    System.out.print("Aby zresetować grę wpisz 'reset', aby wyjść wpisz 'exit': ");
-                    String cmd = scanner.nextLine();
-                    if (cmd.equalsIgnoreCase("exit")) {
-                        finalServer.unregisterClient(finalClientStub);
-                        System.out.println("Wylogowano z serwera. Zakończono.");
-                        break;
-                    } else if (cmd.equalsIgnoreCase("reset")) {
-                        mySymbol = finalServer.resetGame(finalClientStub);
-                        if (mySymbol == 'X' || mySymbol == 'O') {
-                            System.out.println("Jesteś graczem '" + mySymbol + "'");
-                        } else {
-                            System.out.println("Jesteś obserwatorem (gra jest pełna).");
-                        }
-                        continue;
-                    }
+                    System.out.print("Aby zagrać jeszcze raz połącz się ponownie: ");
                     break;
                 }
                 if (mySymbol == ' ') {
