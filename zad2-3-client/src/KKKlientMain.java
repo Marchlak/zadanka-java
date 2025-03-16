@@ -14,6 +14,8 @@ public class KKKlientMain {
                 System.setSecurityManager(new SecurityManager());
             }
             System.setProperty("java.rmi.server.hostname", "192.168.0.103");
+            System.setProperty("javax.net.ssl.trustStore", "/home/marchlak/studia/java-zadanka/klucze/client.truststore");
+            System.setProperty("javax.net.ssl.trustStorePassword", "admin123");
 
             scanner = new Scanner(System.in);
 
@@ -30,7 +32,6 @@ public class KKKlientMain {
                 System.out.println("Jesteś obserwatorem (gra jest pełna).");
             }
 
-            // Tworzymy zmienne finalne/efektywnie finalne, aby użyć ich w lambdzie
             final KKSerwerInt finalServer = server;
             final KKKlientInt finalClientStub = clientStub;
 

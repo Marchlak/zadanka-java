@@ -7,7 +7,7 @@ public class DatabaseServerMain {
             System.setProperty("java.rmi.server.codebase", "file://home/marchlak/studia/java-zadanka/zad2-1/out/production/zad1");
             LocateRegistry.createRegistry(1199);
 
-            System.setProperty("java.rmi.server.hostname", "192.168.0.103");
+            System.setProperty("java.rmi.server.hostname", "82.139.141.152");
             System.setProperty("java.security.policy", "security.policy");
 
             if (System.getSecurityManager() == null) {
@@ -15,7 +15,7 @@ public class DatabaseServerMain {
             }
 
             DatabaseServerImpl server = new DatabaseServerImpl();
-            Naming.rebind("rmi://192.168.0.103:1199/DatabaseServer", server);
+            Naming.rebind("rmi://82.139.141.152:1199/DatabaseServer", server);
             System.out.println("Serwer bazy danych oczekuje na połączenia...");
         } catch (Exception e) {
             e.printStackTrace();

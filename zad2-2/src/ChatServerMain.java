@@ -5,7 +5,7 @@ public class ChatServerMain {
     public static void main(String[] args) {
         try {
 
-            System.setProperty("java.rmi.server.hostname", "192.168.0.103");
+            System.setProperty("java.rmi.server.hostname", "82.139.141.152");
             System.setProperty("java.security.policy", "security.policy");
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
@@ -14,7 +14,7 @@ public class ChatServerMain {
             LocateRegistry.createRegistry(1199);
 
             ChatServerImpl server = new ChatServerImpl();
-            Naming.rebind("rmi://192.168.0.103:1199/ChatServer", server);
+            Naming.rebind("rmi://82.139.141.152:1199/ChatServer", server);
             System.out.println("Chat server dziala...");
         } catch (Exception e) {
             e.printStackTrace();

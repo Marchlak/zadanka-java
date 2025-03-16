@@ -1,3 +1,5 @@
+import javax.rmi.ssl.SslRMIClientSocketFactory;
+import javax.rmi.ssl.SslRMIServerSocketFactory;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ public class KKSerwerImpl extends UnicastRemoteObject implements KKSerwerInt {
     private char currentPlayer;
 
     public KKSerwerImpl() throws RemoteException {
-        super();
+        super(0, new SslRMIClientSocketFactory(), new SslRMIServerSocketFactory());
         board = new char[9];
         for (int i = 0; i < 9; i++) {
             board[i] = ' ';
@@ -21,6 +23,7 @@ public class KKSerwerImpl extends UnicastRemoteObject implements KKSerwerInt {
         currentPlayer = 'X';
     }
 
+    @Override
     public synchronized char registerClient(KKKlientInt client) throws RemoteException {
         if (clients.size() < 2) {
             clients.add(client);
@@ -36,7 +39,6 @@ public class KKSerwerImpl extends UnicastRemoteObject implements KKSerwerInt {
                 return 'O';
             }
         }
-        System.out.println("Siema");
         clients.add(client);
         broadcastUpdate();
         return ' ';

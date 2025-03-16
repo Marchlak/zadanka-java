@@ -8,7 +8,7 @@ public class ChatClientMain {
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
             }
-            System.setProperty("java.rmi.server.hostname", "192.168.0.103");
+            System.setProperty("java.rmi.server.hostname", "82.139.141.152");
 
 
             Scanner scanner = new Scanner(System.in);
@@ -17,7 +17,7 @@ public class ChatClientMain {
 
             ChatClientInt client = new ChatClientImpl();
 
-            ChatServerInt server = (ChatServerInt) Naming.lookup("rmi://192.168.0.103:1199/ChatServer");
+            ChatServerInt server = (ChatServerInt) Naming.lookup("rmi://82.139.141.152:1199/ChatServer");
 
             server.registerClient(client);
 
