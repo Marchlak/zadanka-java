@@ -13,7 +13,7 @@ public class KKKlientMain {
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new SecurityManager());
             }
-            System.setProperty("java.rmi.server.hostname", "192.168.0.103");
+            System.setProperty("java.rmi.server.hostname", "82.139.138.113");
             System.setProperty("javax.net.ssl.trustStore", "/home/marchlak/studia/java-zadanka/klucze/client.truststore");
             System.setProperty("javax.net.ssl.trustStorePassword", "admin123");
 
@@ -22,7 +22,7 @@ public class KKKlientMain {
             client = new KKKlientImpl();
             clientStub = client;
 
-            server = (KKSerwerInt) Naming.lookup("rmi://192.168.0.103:1199/KKSerwer");
+            server = (KKSerwerInt) Naming.lookup("rmi://82.139.138.113:1199/KKSerwer");
 
             mySymbol = server.registerClient(clientStub);
 

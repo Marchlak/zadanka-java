@@ -1,0 +1,23 @@
+Launching GlassFish on Felix platform
+Registered com.sun.enterprise.glassfish.bootstrap.osgi.EmbeddedOSGiGlassFishRuntime@bae01e1 in service registry.
+Found populator: com.sun.enterprise.v3.server.GFDomainXml
+
+
+
+#!## LogManagerService.postConstruct : rootFolder=/usr/local/glassfish4/glassfish
+#!## LogManagerService.postConstruct : templateDir=/usr/local/glassfish4/glassfish/lib/templates
+#!## LogManagerService.postConstruct : src=/usr/local/glassfish4/glassfish/lib/templates/logging.properties
+#!## LogManagerService.postConstruct : dest=/usr/local/glassfish4/glassfish/domains/domain1/config/logging.properties
+Completed shutdown of Log manager service
+Completed shutdown of GlassFish runtime
+Restarting Domain...
+Launching GlassFish on Felix platform
+Registered com.sun.enterprise.glassfish.bootstrap.osgi.EmbeddedOSGiGlassFishRuntime@2c9509c5 in service registry.
+Found populator: com.sun.enterprise.v3.server.GFDomainXml
+
+
+
+#!## LogManagerService.postConstruct : rootFolder=/usr/local/glassfish4/glassfish
+#!## LogManagerService.postConstruct : templateDir=/usr/local/glassfish4/glassfish/lib/templates
+#!## LogManagerService.postConstruct : src=/usr/local/glassfish4/glassfish/lib/templates/logging.properties
+#!## LogManagerService.postConstruct : dest=/usr/local/glassfish4/glassfish/domains/domain1/config/logging.properties

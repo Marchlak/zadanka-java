@@ -7,7 +7,7 @@ public class KKSerwerMain {
             LocateRegistry.createRegistry(1199);
 
             System.setProperty("java.security.policy", "security.policy");
-            System.setProperty("java.rmi.server.hostname", "192.168.0.103");
+            System.setProperty("java.rmi.server.hostname", "82.139.138.113");
             System.setProperty("javax.net.ssl.keyStore", "/home/marchlak/studia/java-zadanka/klucze/server.keystore");
             System.setProperty("javax.net.ssl.keyStorePassword", "admin123");
 
@@ -16,9 +16,8 @@ public class KKSerwerMain {
             }
 
 
-
             KKSerwerImpl server = new KKSerwerImpl();
-            Naming.rebind("rmi://192.168.0.103:1199/KKSerwer", server);
+            Naming.rebind("rmi://82.139.138.113:1199/KKSerwer", server);
             System.out.println("Serwer kółko i krzyżyk wystartował...");
         } catch (Exception e) {
             e.printStackTrace();
