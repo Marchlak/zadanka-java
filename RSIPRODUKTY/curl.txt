@@ -1,0 +1,43 @@
+curl -i \
+     -H "Accept: application/xml" \
+     "http://marchlak:8181/rest-ws/api/messages/messageallxml"
+curl -i \
+     -H "Accept: application/json" \
+     "http://marchlak:8181/rest-ws/api/messages/messagesalljson"
+curl -i \
+     -H "Accept: application/json" \
+     -H "X-Client-Name: MyClient" \
+     "http://marchlak:8181/rest-ws/api/messages/messagesalljson?author=Kamil%20Kowal"
+curl -i \
+     -H "Accept: application/json" \
+     "http://marchlak:8181/rest-ws/api/messages/2"
+curl -i \
+     -X POST \
+     -H "Content-Type: application/json" \
+     -d '{"message":"Cześć!", "author":"Adam Grabowiecki"}' \
+     "http://marchlak:8181/rest-ws/api/messages"
+curl -i \
+     -X PUT \
+     -H "Content-Type: application/json" \
+     -d '{"message":"Zaktualizowana wiadomość", "author":"Adam Grabowiecki"}' \
+     "http://marchlak:8181/rest-ws/api/messages/4"
+curl -i \
+     -X DELETE \
+     -H "Accept: application/json" \
+     "http://marchlak:8181/rest-ws/api/messages/4;confirm=yes"
+curl -i \
+     -H "Accept: text/plain" \
+     "http://marchlak:8181/rest-ws/api/messages/test/uriinfo"
+
+curl -i \
+     -H "X-Client-Name: TestClient" \
+     -H "X-Test-Header: foo" \
+     "http://marchlak:8181/rest-ws/api/messages/test/headers"
+curl -i \
+     -H "Accept: application/json" \
+     -H "X-Client-Name: MyClient" \
+     "http://marchlak:8181/rest-ws/api/messages/messagesalljson?author=Kamil%20Kowal"
+curl -i      -H "Accept: application/json" \
+-H "X-Client-Name: Kamil Kowal" \
+"http://marchlak:8181/rest-ws/api/messages/messagesalljson"
+

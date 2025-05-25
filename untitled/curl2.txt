@@ -1,0 +1,59 @@
+
+#!/usr/bin/env bash
+
+########################################
+# Ćwiczenie 1 – GET (odczyt) i PUT (aktualizacja)
+########################################
+
+# 1A: pobranie wiadomości o ID = 1 (z Basic Auth)
+curl -i -u user:password http://localhost:8181/rest-ws/api/messages/1
+
+# 1B: aktualizacja treści wiadomości o ID = 1 (z Basic Auth)
+curl -i -u user:password -X PUT \
+     -H "Content-Type: application/json" \
+     -d '{"id":1,"message":"Nowa treść","author":"Kamil"}' \
+     http://localhost:8181/rest-ws/api/messages/1
+
+########################################
+# Ćwiczenie 2 – wyszukiwanie po prefiksie `zaczynasie`
+########################################
+
+# GET z parametrem zaczynasie=No (z Basic Auth)
+curl -i -u user:password "http://localhost:8181/rest-ws/api/messages?zaczynasie=No"
+
+########################################
+# Ćwiczenie 3 – HATEOAS (linki `self` i `comments`)
+########################################
+
+# GET zwracający JSON z polem "links" (z Basic Auth)
+curl -i -u user:password http://localhost:8181/rest-ws/api/messages/1
+
+########################################
+# Ćwiczenie 4 – @Singleton vs. zwykły serwis
+########################################
+
+# 4A: licznik bez @Singleton (zawsze startuje od 1; z Basic Auth)
+curl -s -u user:password http://localhost:8181/rest-ws/api/counter
+curl -s -u user:password http://localhost:8181/rest-ws/api/counter
+
+# 4B: licznik z @Singleton (wartość rośnie globalnie; z Basic Auth)
+curl -s -u user:password http://localhost:8181/rest-ws/api/counterSingleton
+curl -s -u user:password http://localhost:8181/rest-ws/api/counterSingleton
+
+########################################
+# Ćwiczenie 5 – filtr Request/Response (nagłówek `mojNaglowek`)
+########################################
+
+# GET, filtr doda nagłówek mojNaglowek=rsi test (z Basic Auth)
+curl -i -u user:password http://localhost:8181/rest-ws/api/messages
+
+########################################
+# Ćwiczenie 6 – filtr Basic Auth (`user:password`)
+########################################
+
+# 6A: bez / niepoprawne dane → 401
+curl -i http://localhost:8181/rest-ws/api/messages
+curl -i -u wrong:creds http://localhost:8181/rest-ws/api/messages
+
+# 6B: poprawne dane → 200 OK (z Basic Auth)
+curl -i -u user:password http://localhost:8181/rest-ws/api/messages
